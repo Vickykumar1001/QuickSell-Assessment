@@ -1,6 +1,5 @@
 .task-board {
-    min-height: calc(100vh - 60px);
-    /* Adjust for header height */
+    min-height: calc(100vh - 100px);
     background-color: #f4f5f8;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
