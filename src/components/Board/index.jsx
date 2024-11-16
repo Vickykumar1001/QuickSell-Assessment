@@ -1,40 +1,70 @@
-import React from 'react';
-import './board.css';
-import { ReactComponent as Done } from '../../assets/icons_FEtask/Done.svg';
-import { ReactComponent as Add } from '../../assets/icons_FEtask/add.svg';
-import { ReactComponent as Dots } from '../../assets/icons_FEtask/3 dot menu.svg';
-import Card from '../Card';
-const Board = () => {
-    const columnData = [
-        { title: 'Backlog', count: 4 },
-        { title: 'Todo', count: 3 },
-        { title: 'In Progress', count: 5 },
-        { title: 'Done', count: 8 },
-        { title: 'Canceled', count: 2 },
-    ];
+import React, { useMemo } from "react";
+import "./board.css";
+import TaskCard from "../Card";
+import { ReactComponent as AddIcon } from "../../assets/icons_FEtask/add.svg";
+import { ReactComponent as MenuDots } from "../../assets/icons_FEtask/3 dot menu.svg";
+import { getPriorityIcon, getStatusIcon } from "../../utils/icons";
+import UserAvatar from "../UserIcon";
+
+function TaskBoard({ data, groupBy, userMap }) {
+    const columnKeys = useMemo(() => Object.keys(data), [data]);
+
+    const getColumnTitle = (key) => {
+        if (groupBy === "status") return key;
+        if (groupBy === "priority") return key;
+        if (groupBy === "user") return userMap[key]?.name || "Unknown User";
+    };
+
+    const getColumnIcon = (key) => {
+        if (groupBy === "status") return getStatusIcon(key);
+        if (groupBy === "priority") return getPriorityIcon(key);
+        if (groupBy === "user") {
+            const user = userMap[key];
+            return user ? <UserAvatar name={user.name} available={user.available} /> : null;
+        }
+    };
 
     return (
-        <div className="board">
-            {columnData.map((item, idx) => (
-                <section key={idx} className="board-section">
-                    <header className="board-header">
-                        <div className="header-left">
-                            <Done />
-                            <div className="header-title">
-                                {item.title}
-                                <span className="task-count">{item.count}</span>
+        <div className="task-board">
+            {columnKeys.map((key) => {
+                const tasks = data[key];
+                const title = getColumnTitle(key);
+                const icon = getColumnIcon(key);
+
+                return (
+                    <div key={key} className="task-column">
+                        <div className="task-column-header">
+                            <div className="header-left">
+                                {icon}
+                                <div className="header-title">
+                                    {title}
+                                    <span className="task-count">{tasks.length}</span>
+                                </div>
                             </div>
+                            {tasks.length > 0 && (
+                                <div className="header-right">
+                                    <AddIcon />
+                                    <MenuDots />
+                                </div>
+                            )}
                         </div>
-                        <div className="header-right">
-                            <Add />
-                            <Dots />
+                        <div className="task-list">
+                            {tasks.map((task) => (
+                                <TaskCard
+                                    key={task.id}
+                                    ticket={task}
+                                    userData={userMap[task.userId]}
+                                    hideStatusIcon={groupBy === "status"}
+                                    hideProfileIcon={groupBy === "user"}
+                                    hidePriorityIcon={groupBy === "priority"}
+                                />
+                            ))}
                         </div>
-                    </header>
-                    <Card />
-                </section>
-            ))}
+                    </div>
+                );
+            })}
         </div>
     );
-};
+}
 
-export default Board;
+export default TaskBoard;
