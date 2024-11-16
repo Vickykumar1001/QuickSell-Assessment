@@ -1,29 +1,35 @@
-import React from 'react';
-import './card.css';
-import UserIcon from '../UserIcon';
-import { ReactComponent as Dots } from '../../assets/icons_FEtask/3 dot menu.svg';
-import { ReactComponent as Done } from '../../assets/icons_FEtask/Done.svg';
+import React from "react";
+import "./card.css";
+import UserIcon from "../UserIcon";
+import { getStatusIcon, getPriorityIcon } from "../../utils/icons";
+import { getPriorityLabel } from "../../utils/ticketUtils";
 
-function TaskCard() {
+function TaskCard({ ticket, userData, hideStatusIcon, hideProfileIcon, hidePriorityIcon }) {
     return (
         <div className="task-card">
             <div className="card-header">
-                <span className="card-id">CAM-1</span>
-                <UserIcon name="Vicky Kumar" />
+                <div className="ticket-id">{ticket.id}</div>
+                {!hideProfileIcon && userData && (
+                    <UserIcon name={userData.name} available={userData.available} />
+                )}
             </div>
-            <div className="card-content">
-                <Done />
-                <h4 className="task-title">Conduct Security Vulnerability Assessment</h4>
+            <div className="card-body">
+                {!hideStatusIcon && getStatusIcon(ticket.status)}
+                <div className="ticket-title">{ticket.title}</div>
             </div>
-            <footer className="card-footer">
-                <div className="options-icon">
-                    <Dots />
-                </div>
-                <div className="tag-wrapper">
-                    <span className="tag-indicator"></span>
-                    <span className="tag-name">Feature Request</span>
-                </div>
-            </footer>
+            <div className="card-footer">
+                {!hidePriorityIcon && (
+                    <div className="priority-icon-container">
+                        {getPriorityIcon(getPriorityLabel(ticket.priority))}
+                    </div>
+                )}
+                {ticket.tag.map((tag, index) => (
+                    <div key={index} className="tag-wrapper">
+                        <div className="tag-icon"></div>
+                        <div className="tag-text">{tag}</div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
