@@ -9,12 +9,10 @@
 .loader-wrapper.fullscreen {
     width: 100vw;
     height: calc(100vh - 60px);
-    /* Header height assumed as 60px */
 }
 
 .loader-text {
     font-size: 1rem;
     font-weight: bold;
     color: #6b6f76;
-    /* Neutral color to match the theme */
 }
