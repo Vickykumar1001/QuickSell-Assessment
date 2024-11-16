@@ -3,14 +3,14 @@ import './board.css';
 import { ReactComponent as Done } from '../../assets/icons_FEtask/Done.svg';
 import { ReactComponent as Add } from '../../assets/icons_FEtask/add.svg';
 import { ReactComponent as Dots } from '../../assets/icons_FEtask/3 dot menu.svg';
-
+import Card from '../Card';
 const Board = () => {
     const columnData = [
+        { title: 'Backlog', count: 4 },
         { title: 'Todo', count: 3 },
         { title: 'In Progress', count: 5 },
-        { title: 'Review', count: 2 },
-        { title: 'Completed', count: 8 },
-        { title: 'Backlog', count: 4 },
+        { title: 'Done', count: 8 },
+        { title: 'Canceled', count: 2 },
     ];
 
     return (
@@ -30,8 +30,7 @@ const Board = () => {
                             <Dots />
                         </div>
                     </header>
-                    <div className="task-card">Task 1</div>
-                    <div className="task-card">Task 2</div>
+                    <Card />
                 </section>
             ))}
         </div>
